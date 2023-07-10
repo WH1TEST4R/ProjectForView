@@ -1,29 +1,51 @@
-#include "Headers.h"
+#include <Windows.h>
+#include <osgViewer/Viewer>
+#include <osg/ShapeDrawable>
+#include <osg/Geode>
+#include <osg/PositionAttitudeTransform>
+#include <osg/ClearNode>
+#include <osgGA/TrackballManipulator>
+#include <osgGA/KeySwitchMatrixManipulator>
+#include <osgUtil/LineSegmentIntersector>
+#include <iostream>
+#include <osgGA/GUIEventAdapter>
+#include <osg/Material>
+#include "Constants.h"
 
-osg::Node* createCube(const osg::Vec4& color, float size)
+osg::Node* createCube(const osg::Vec4& color, float size);
+osg::Geode* createSmallCube();
+
+class KeyboardEventHandler : public osgGA::GUIEventHandler
 {
-   osg::ref_ptr<osg::Box> cubeBox = new osg::Box(osg::Vec3(0.0f, 0.0f, 0.0f), size, size, size);
-   osg::ref_ptr<osg::ShapeDrawable> cubeShapeDrawable = new osg::ShapeDrawable(cubeBox);
-   cubeShapeDrawable->setColor(color);
-   osg::ref_ptr<osg::Geode> cubeGeode = new osg::Geode;
-   cubeGeode->addDrawable(cubeShapeDrawable);
+public:
+   KeyboardEventHandler(osg::PositionAttitudeTransform* redCubeTransform, osg::Group* blueCubesGroup)
+      : _redCubeTransform(redCubeTransform), _blueCubesGroup(blueCubesGroup) {}
 
-   osg::ref_ptr<osg::PositionAttitudeTransform> cubeTransform = new osg::PositionAttitudeTransform;
-   cubeTransform->addChild(cubeGeode);
+   bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa);
 
-   return cubeTransform.release();
-}
+private:
+   osg::ref_ptr<osg::PositionAttitudeTransform> _redCubeTransform;
+   osg::ref_ptr<osg::Group> _blueCubesGroup;
 
-osg::Node* createSmallCube()
-{
-   osg::ref_ptr<osg::Box> smallCubeBox = new osg::Box(osg::Vec3(0.0f, 0.0f, 0.0f), SmallCubeSize, SmallCubeSize, SmallCubeSize);
-   osg::ref_ptr<osg::ShapeDrawable> smallCubeShapeDrawable = new osg::ShapeDrawable(smallCubeBox);
-   smallCubeShapeDrawable->setColor(osg::Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-   osg::ref_ptr<osg::Geode> smallCubeGeode = new osg::Geode;
-   smallCubeGeode->addDrawable(smallCubeShapeDrawable);
+   void moveRedCube(const osg::Vec3& direction);
+   bool isPositionValid(const osg::Vec3& position);
+   void checkCollision();
+   void addSmallCube();
+};
 
-   osg::ref_ptr<osg::PositionAttitudeTransform> smallCubeTransform = new osg::PositionAttitudeTransform;
-   smallCubeTransform->addChild(smallCubeGeode);
+//class MouseEventHandler : public osgGA::GUIEventHandler
+//{
+//public:
+//   MouseEventHandler(osg::PositionAttitudeTransform* redCubeTransform, osg::Group* blueCubesGroup)
+//      : _redCubeTransform(redCubeTransform), _blueCubesGroup(blueCubesGroup) {}
+//   virtual bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa);
+//private:
+//   void pickObjectUnderMouse(float x, float y);
+//   void changeCubeColor(osg::PositionAttitudeTransform* cubeTransform, const osg::Vec4& color);
+//   osg::ref_ptr<osgGA::GUIEventAdapter> _eventProxy;
+//   osg::Camera* _camera;
+//   osg::PositionAttitudeTransform* _redCubeTransform;
+//   osg::Group* _blueCubesGroup;
+//  };
 
-   return smallCubeTransform.release();
-}
+#pragma once
