@@ -1,4 +1,4 @@
-﻿#include "Headers.h"
+#include "Headers.h"
    
 int main()
 {
@@ -27,8 +27,8 @@ int main()
    osg::ref_ptr<osg::Group> blueCubesGroup = new osg::Group;
    root->addChild(blueCubesGroup);
 
-   // Создание основного куба
-   osg::ref_ptr<osg::Node> redCube = createCube(osg::Vec4(1.0f, 0.0f, 0.0f, 1.0f), CubeSize); // Красный цвет
+   // Создание основного куба красного цвета
+   osg::ref_ptr<osg::Node> redCube = createCube(osg::Vec4(1.0f, 0.0f, 0.0f, 1.0f), CubeSize);
    osg::ref_ptr<osg::PositionAttitudeTransform> redCubeTransform = new osg::PositionAttitudeTransform;
    redCubeTransform->setPosition(osg::Vec3(0.0f, -0.3f, 0.0f));
    redCubeTransform->addChild(redCube);
@@ -38,18 +38,19 @@ int main()
    osg::ref_ptr<KeyboardEventHandler> keyboardEventHandler = new KeyboardEventHandler(redCubeTransform, blueCubesGroup);
    viewer.addEventHandler(keyboardEventHandler);
 
+   //// Добавление обработчика мыши
+   //osg::ref_ptr<MouseEventHandler> mouseEventHandler = new MouseEventHandler(redCubeTransform, blueCubesGroup);
+   //viewer.addEventHandler(mouseEventHandler);
 
    // Установка корневого узла в визуализатор
    viewer.setSceneData(root);
 
+   // Добавление манипулятора камеры, который устанавливаем для визуализатора
    osgGA::TrackballManipulator* manipulator = new osgGA::TrackballManipulator;
    viewer.setCameraManipulator(manipulator);
 
-   // Установка начальной позиции камеры
-   manipulator->setHomePosition(osg::Vec3d(0.0, -5.0, -11.0), osg::Vec3d(), osg::Vec3d(0.0, 0.0, 0.0));
-
-
-
+   // Установка начальной позиции камеры (от 3-го лица над красным кубом)
+   manipulator->setHomePosition(osg::Vec3d(0.0, -13.0, -17.0), osg::Vec3d(), osg::Vec3d(0.0, 0.0, 0.0));
 
    viewer.run();
 
