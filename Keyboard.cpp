@@ -1,89 +1,5 @@
 #include "Headers.h"
 
-//Обработка нажатий ЛКМ не была реализована
-//Методы покраски синих кубов по нажатию работают корректно
-//Проблема связана с определением координат клика мыши
-//На нахождение решения потрачено много времени
-//В лучшем случае отклонение от реальных кубов +-5.0f
-
-//bool MouseEventHandler::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa)
-//{
-//   if (ea.getEventType() == osgGA::GUIEventAdapter::PUSH && ea.getButton() == osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON)
-//   {
-//      
-//      osgViewer::View* view = dynamic_cast<osgViewer::View*>(&aa);
-//      osg::Camera* camera = view->getCamera();
-//      const osg::Viewport* viewport = camera->getViewport();
-//      float normalizedX = static_cast<float>(ea.getX()) / viewport->width();
-//      float normalizedY = static_cast<float>(ea.getY()) / viewport->height();
-//      osg::Node* smallCube = createSmallCube();
-//      osg::Vec3 position = osg::Vec3(ea.getX()/30,-SmallCubeSize/2, ea.getY()/25 ); // Изменение положения синего куба
-//      osg::PositionAttitudeTransform* smallCubeTransform = new osg::PositionAttitudeTransform;
-//      smallCubeTransform->setPosition(position);
-//      smallCubeTransform->addChild(smallCube);
-//      _blueCubesGroup->addChild(smallCubeTransform);
-//      std::cout << "CLICK WAS HERE\n";
-//      std::cout << ea.getX() << " " << normalizedX << " \n";
-//      std::cout << ea.getY() << " " << normalizedY << " \n";
-//   }
-//   return false;
-//}
-
-//void MouseEventHandler::pickObjectUnderMouse(float x, float y)
-//{
-//   for (unsigned int i = 0; i < _blueCubesGroup->getNumChildren(); ++i)
-//   {
-//      osg::PositionAttitudeTransform* smallCubeTransform = dynamic_cast<osg::PositionAttitudeTransform*>(_blueCubesGroup->getChild(i));
-//
-//      osg::Vec3 cubePosition = smallCubeTransform->getPosition();
-//      float cubeX = cubePosition.x();
-//      float cubeY = cubePosition.y();
-//      float cubeZ = cubePosition.z();
-//
-//      float distance = sqrt((x - cubeX) * (x - cubeX) +
-//         (-SmallCubeSize/2 - cubeY) * (-SmallCubeSize/2 - cubeY) +
-//         (y - cubeZ) * (y - cubeZ));
-//      if (distance <= SmallCubeSize)
-//      {
-//         std::cout << "Clicked coordinates: \n";
-//         std::cout << x << " " << -SmallCubeSize / 2 << " " << y << "\n";
-//         std::cout << "Cube coordinates: \n";
-//         std::cout << cubeX << " " << cubeY << " " << cubeZ << " \n";
-//         std::cout << "CLICKED" << std::endl;
-//         std::cout << std::endl;
-//         changeCubeColor(smallCubeTransform, osg::Vec4(0.0f, 1.0f, 0.0f, 1.0f));
-//      }
-//      else
-//      {
-//         std::cout << "NOT CLICKED\n";
-//         std::cout << "Clicked coordinates: \n";
-//         std::cout << x << " " << -SmallCubeSize / 2 << " " << y << "\n";
-//         std::cout << "Cube coordinates: \n";
-//         std::cout << cubeX << " " << cubeY << " " << cubeZ << " \n";
-//         std::cout << std::endl;
-//      }
-//   }
-//}
-
-
-
-
-//void MouseEventHandler::changeCubeColor(osg::PositionAttitudeTransform* cubeTransform, const osg::Vec4& color)
-//{
-//   osg::Geode* geode = cubeTransform->asGeode();
-//
-//   if (geode)
-//   {
-//      while (geode->getNumDrawables() > 0)
-//      {
-//         geode->removeDrawable(geode->getDrawable(0));
-//      }
-//      osg::ShapeDrawable* shapeDrawable = new osg::ShapeDrawable(new osg::Box(osg::Vec3(0.0f, 0.0f, 0.0f), SmallCubeSize, SmallCubeSize, SmallCubeSize));
-//      shapeDrawable->setColor(color);
-//      geode->addDrawable(shapeDrawable);
-//   }
-//}
-
 //Метод handle()
 //При нажатии клавиш WASD двигает красный куб в соотв направлении
 //При нажатии 1 - создает один синий куб в случайной точке поля
@@ -94,22 +10,18 @@ bool KeyboardEventHandler::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIAc
       switch (ea.getKey())
       {
       case 'w':
-      case 'W':
       case 'ц':
          moveRedCube(osg::Vec3(0.0f, 0.0f, 1.0f));
          break;
       case 's':
-      case 'S':
       case 'ы':
          moveRedCube(osg::Vec3(0.0f, 0.0f, -1.0f));
          break;
       case 'a':
-      case 'A':
       case 'ф':
          moveRedCube(osg::Vec3(-1.0f, 0.0f, 0.0f));
          break;
       case 'd':
-      case 'D':
       case 'в':
          moveRedCube(osg::Vec3(1.0f, 0.0f, 0.0f));
          break;
@@ -120,6 +32,7 @@ bool KeyboardEventHandler::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIAc
          break;
       }
    }
+
    return false;
 }
 
@@ -203,8 +116,6 @@ void KeyboardEventHandler::addSmallCube() {
       (SmallCubeSize + rand() % (int)(FloorSize/2)) * (rand() % 2 == 0 ? -1.0f : 1.0f),
       -(SmallCubeSize * 0.5f),
       (SmallCubeSize + rand() % (int)(FloorSize / 2)) * (rand() % 2 == 0 ? -1.0f : 1.0f));
-   /*std::cout << "REAL CUBE IN:\n";
-   std::cout << position.x() << " " << position.z() << std::endl;*/
    osg::PositionAttitudeTransform* smallCubeTransform = new osg::PositionAttitudeTransform;
    smallCubeTransform->setPosition(position);
    smallCubeTransform->addChild(smallCube);
